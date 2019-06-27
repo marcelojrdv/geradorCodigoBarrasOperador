@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<title>Gerador</title>
+		<style>
+			body {
+				background-color: #E6E6E6; 
+			}
+			
+			#div_global{
+				border-style: solid;
+				border-width: 1px;
+				border-radius: 6px;
+				margin: 0 auto;
+				margin-top: 10%;
+				width: 350px;
+				height: 200;
+				background-color: #A9BCF5;
+				box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
+			}
+			
+			#div_form {
+				/*position: static;*/
+				/*border-style: solid;*/
+				margin-top: 30px; 
+				margin-right: 35px;
+				margin-left: 35px;
+			}
+			
+			#lb_operador, #lb_senha, #titulo_gerador{
+				font-size: 15px;
+				font-family: "Verdana";
+			}
+			
+			#bt_gerar {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				width: 100;
+				
+			}
+			
+			#result {
+				width: 200px;
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			#senha {
+				width: 200px;
+			}
+		</style>
+		
+		<script>
+			function calcularSenha() {
+				var senha 		= document.getElementById("senha");
+				var operador 	= document.getElementById("cod_operador");
+				var result 		= document.getElementById("result");
+				var senha_crip	= "";
+				
+				if (senha.value == null || senha.value == '' || !isNaN(senha.value) == false){
+					alert("Valor inválio");
+					result.value = '';
+					senha.value = '';
+				} else { 
+					senha_crip = lpad(senha.value, 8);
+					senha_crip = -1*(senha_crip - 99999999);
+					
+					//Aqui está concatetando a marcação + operador + senha criptografada
+					var geral = "299" + operador.value + senha_crip;
+					var soma =  geral.substring(0, 1) 	* 1 +
+								geral.substring(1, 2) 	* 3 +
+								geral.substring(2, 3) 	* 1 +
+								geral.substring(3, 4) 	* 3 +
+								geral.substring(4, 5) 	* 1 +
+								geral.substring(5, 6) 	* 3 +
+								geral.substring(6, 7)	* 1 +
+								geral.substring(7, 8)	* 3 +
+								geral.substring(8, 9)   * 1 +
+								geral.substring(9, 10)  * 3 +
+								geral.substring(10, 11) * 1 +
+								geral.substring(11, 12) * 3;
+								
+					//Aqui concatena o que tinhamos com o resultado da dezena mais proxima da soma menos a soma
+					var cod_barras = geral + (arredonda(soma) - soma);
+					
+					result.value = cod_barras;
+				}
+				
+			}
+			
+			function lpad(num, size) {
+				var s = num+"";
+				while (s.length < size) s = "0" + s;
+				return s;
+			}
+			
+			function arredonda(n) {
+				return n % 10 ? n + 10 - n % 10 : n;
+			}
+		</script>		
+	</head>
+	
+	<body>
+		<span id = "titulo_gerador"> Gerador de código de barras <span>
+		<div id = "div_global">
+			<div id = "div_form">
+				<form>
+					<p><span id = "lb_operador">Operador:<span>
+						<select id = "cod_operador">
+						  <option value="0">0 - Administrador</option>
+						  <option value="1">1 - Manutenção</option>
+						  <option value="2">2 - Gerente</option>
+						  <option value="3">3 - Supervisor</option>
+						  <option value="4">4 - Operador</option>
+						  <option value="5">5 - Liberador</option>
+						  <option value="6">6 - Vendedor</option>
+						</select>
+					</p>
+					<span id = "lb_senha">Senha:</span> <input type="text" id= "senha" name="senha" maxlength="8"/>
+					<p><input type="button" id="bt_gerar" name="bt_gerar" value="Gerar Código" onclick="calcularSenha()"/></p>
+					<p><input type="text" id= "result" name="result" disabled/></p>
+				</form>
+			</div>
+		<div>
+	</body>
+</html>
